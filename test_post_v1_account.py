@@ -1,10 +1,16 @@
 import requests
 import pprint
 from json import loads
+from account_api import AccountApi
+from login_api import LoginApi
+from mailhog_api import MailhogApi
+
 def test_v1_account():
     # Регистрация пользователя
-
-    login = 'wow3'
+    account_api = AccountApi(host='http://185.185.143.231:5051')
+    login_api = LoginApi(host='http://185.185.143.231:5051')
+    mailhog_api = MailhogApi(host='http://185.185.143.231:5025')
+    login = 'wow9'
     email = f'{login}@mail.ru'
     password = '12345678'
 
@@ -13,23 +19,54 @@ def test_v1_account():
         'email': email,
         'password': password,
     }
-
-    response = requests.post('http://185.185.143.231:5051/v1/account', json=json_data)
+    
+    response = account_api.post_v1_account(json_data=json_data)
     print(response.status_code)
     print(response.text)
     assert response.status_code == 201, f'Польователь не был создан, {response.json()}'
 
     # Получение письма в почтовом сервере
-
-    params = {
-        'limit': '50',
-    }
-
-    response = requests.get('http://185.185.143.231:5025/api/v2/messages', params=params, verify=False)
+    
+    response = mailhog_api.get_api_v2_messages()
+    
     print(response.status_code)
     print(response.text)
     # pprint.pprint(response.json())
+    assert response.status_code == 200, 'Письма не были получены'
+
+    
     # Получение токена
+    token = get_token_by_login(login, response)
+    assert token is not None, f'Токен для пользователя {login} не был получен'
+    
+    # Активация пользователя
+    response = account_api.put_v1_account_token(token=token)
+    
+    print(response.status_code)
+    print(response.text)
+    assert response.status_code == 200, 'Польователь не был активирован'
+
+    
+    # Авторизация пользователя
+
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True,
+    }
+    
+    response = login_api.post_v1_account_login(json_data=json_data)
+    print(response.status_code)
+    print(response.text)
+    assert response.status_code == 200, 'Пользователь не авторизован'
+
+
+
+
+
+
+
+def get_token_by_login(login, response):
     token = None
     for item in response.json()['items']:
         user_data = loads(item['Content']['Body'])
@@ -39,20 +76,4 @@ def test_v1_account():
             print(user_login)
             print(token)
             assert token is not None, 'Письмо с токеном не пришло'
-    # Активация пользователя
-    response = requests.put(f'http://185.185.143.231:5051/v1/account/{token}')
-    print(response.status_code)
-    print(response.text)
-    assert response.status_code == 200, 'Пльзователь не активирован'
-    # Авторизация пользователя
-
-    json_data = {
-        'login': login,
-        'password': password,
-        'rememberMe': True,
-    }
-
-    response = requests.post('http://185.185.143.231:5051/v1/account/login', json=json_data)
-    print(response.status_code)
-    print(response.text)
-    assert response.status_code == 200, 'Пользователь не авторизован'
+    return token
