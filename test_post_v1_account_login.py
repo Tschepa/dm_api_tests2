@@ -5,7 +5,8 @@ from account_api import AccountApi
 from login_api import LoginApi
 from mailhog_api import MailhogApi
 
-def test_v1_account():
+
+def test_v1_account_login():
     # Регистрация пользователя
     account_api = AccountApi(host='http://185.185.143.231:5051')
     login_api = LoginApi(host='http://185.185.143.231:5051')
@@ -13,7 +14,7 @@ def test_v1_account():
     login = 'wow13'
     email = f'{login}@mail.ru'
     password = '12345678'
-
+    
     json_data = {
         'login': login,
         'email': email,
@@ -24,7 +25,7 @@ def test_v1_account():
     print(response.status_code)
     print(response.text)
     assert response.status_code == 201, f'Пользователь не был создан, {response.json()}'
-
+    
     # Получение письма в почтовом сервере
     
     response = mailhog_api.get_api_v2_messages()
@@ -44,10 +45,9 @@ def test_v1_account():
     print(response.status_code)
     print(response.text)
     assert response.status_code == 200, 'Пользователь не был активирован'
-
     
     # Авторизация пользователя
-
+    
     json_data = {
         'login': login,
         'password': password,
@@ -58,8 +58,12 @@ def test_v1_account():
     print(response.status_code)
     print(response.text)
     assert response.status_code == 200, 'Пользователь не авторизован'
-    
-def get_token_by_login(login, response):
+
+
+def get_token_by_login(
+        login,
+        response
+        ):
     token = None
     for item in response.json()['items']:
         user_data = loads(item['Content']['Body'])

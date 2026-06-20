@@ -41,6 +41,7 @@ class AccountApi:
         print(response.text)
         assert response.status_code == 200, 'Пльзователь не активирован'
         return response
+    
     def put_v1_account_email(
             self,
             json_data
