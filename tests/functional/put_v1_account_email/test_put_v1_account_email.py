@@ -1,10 +1,8 @@
-import requests
-import pprint
 from json import loads
 
-from account_api import AccountApi
-from login_api import LoginApi
-from mailhog_api import MailhogApi
+from dm_api_account.apis.account_api import AccountApi
+from dm_api_account.apis.login_api import LoginApi
+from api_mailhog.apis.mailhog_api import MailhogApi
 
 def test_v1_account_email():
     # Регистрация пользователя
@@ -31,7 +29,7 @@ def test_v1_account_email():
     response = mailhog_api.get_api_v2_messages()
     
     print(response.status_code)
-    print(response.text)
+    print(response.text
     # pprint.pprint(response.json())
     assert response.status_code == 200, 'Письма не были получены'
     
