@@ -11,7 +11,7 @@ def test_v1_account_token():
     login_api = LoginApi(host='http://185.185.143.231:5051')
     mailhog_api = MailhogApi(host='http://185.185.143.231:5025')
     
-    login = 'wow0040'
+    login = 'wow10040'
     email = f'{login}@mail.ru'
     password = '12345678'
     
@@ -45,6 +45,7 @@ def test_v1_account_token():
     print(response.text)
     assert response.status_code == 200, 'Пользователь не был активирован'
 
+"""
 def get_token_by_login(
         login,
         response
@@ -53,6 +54,27 @@ def get_token_by_login(
     for item in response.json()['items']:
         user_data = loads(item['Content']['Body'])
         user_login = user_data['Login']
+        if user_login == login:
+            token = user_data['ConfirmationLinkUrl'].split('/')[-1]
+            print(user_login)
+            print(token)
+            assert token is not None, 'Письмо с токеном о не пришло'
+    return token
+"""
+
+
+def get_token_by_login(
+        login,
+        response
+):
+    token = None
+    for item in response.json()['items']:
+        try:
+            user_data = loads(item['Content']['Body'])
+        except (JSONDecodeError, KeyError):
+            continue  # ← ФИКС: пропускаем плохие письма
+        
+        user_login = user_data['Login']  # ← ОСТАЛОСЬ КАК БЫЛО
         if user_login == login:
             token = user_data['ConfirmationLinkUrl'].split('/')[-1]
             print(user_login)
