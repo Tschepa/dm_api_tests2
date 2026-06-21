@@ -29,7 +29,7 @@ def test_v1_account_email():
     response = mailhog_api.get_api_v2_messages()
     
     print(response.status_code)
-    print(response.text
+    print(response.text)
     # pprint.pprint(response.json())
     assert response.status_code == 200, 'Письма не были получены'
     
