@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, JSONDecodeError
 from dm_api_account.apis.account_api import AccountApi
 from dm_api_account.apis.login_api import LoginApi
 from api_mailhog.apis.mailhog_api import MailhogApi
@@ -56,12 +56,33 @@ def test_v1_account():
     print(response.status_code)
     print(response.text)
     assert response.status_code == 200, 'Пользователь не авторизован'
-    
+"""
 def get_token_by_login(login, response):
     token = None
     for item in response.json()['items']:
         user_data = loads(item['Content']['Body'])
         user_login = user_data['Login']
+        if user_login == login:
+            token = user_data['ConfirmationLinkUrl'].split('/')[-1]
+            print(user_login)
+            print(token)
+            assert token is not None, 'Письмо с токеном о не пришло'
+    return token
+"""
+
+
+def get_token_by_login(
+        login,
+        response
+        ):
+    token = None
+    for item in response.json()['items']:
+        try:
+            user_data = loads(item['Content']['Body'])
+        except (JSONDecodeError, KeyError):
+            continue  # ← ФИКС: пропускаем плохие письма
+        
+        user_login = user_data['Login']  # ← ОСТАЛОСЬ КАК БЫЛО
         if user_login == login:
             token = user_data['ConfirmationLinkUrl'].split('/')[-1]
             print(user_login)
