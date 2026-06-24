@@ -6,11 +6,21 @@ import uuid
 from json import JSONDecodeError
 import curlify
 
+from restclient.configuration import Configuration
+
 
 class RestClient:
-    def __init__(self, host, headers=None):
-        self.host = host
-        self.headers = headers
+    def __init__(
+            self,
+            configuration: Configuration
+    ):
+        """host,
+                    headers=None"""
+        #self.host = host
+        self.host = configuration.host
+        #self.headers = headers
+        self.headers = configuration.headers
+        self.disable_log = configuration.disable_log #добавлено после создания класса конфигурации
         self.session = session() # иниц-ия сессии
         # иниц-я логгер с именем текущего модуля и добавь во все сообщения поле service='api', чтобы я знал, откуда пришёл лог.
         self.log = structlog.get_logger(__name__).bind(service='api')# иниц-ия логов
@@ -48,6 +58,10 @@ class RestClient:
         # pip install structlog =>  фиксируем зависимости pip freeze > requirements.txt
         log = self.log.bind(event_id=str(uuid.uuid4()))
         full_url= self.host + path
+        
+        if self.disable_log:
+            rest_response = self.session.request(method=method, url=full_url, **kwargs)
+            return rest_response
         
         # логируем запрос
         log.msg(
