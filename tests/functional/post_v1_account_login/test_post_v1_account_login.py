@@ -15,7 +15,6 @@ structlog.configure(
     ]
 )
 
-
 def test_v1_account_login():
     # Регистрация пользователя
     account_api = AccountApi(host='http://185.185.143.231:5051')
@@ -32,16 +31,16 @@ def test_v1_account_login():
     }
     
     response = account_api.post_v1_account(json_data=json_data)
-    print(response.status_code)
-    print(response.text)
+    """print(response.status_code)
+    print(response.text)"""
     assert response.status_code == 201, f'Пользователь не был создан, {response.json()}'
     
     # Получение письма в почтовом сервере
     
     response = mailhog_api.get_api_v2_messages()
     
-    print(response.status_code)
-    print(response.text)
+    """print(response.status_code)
+    print(response.text)"""
     # pprint.pprint(response.json())
     assert response.status_code == 200, 'Письма не были получены'
     
@@ -52,8 +51,8 @@ def test_v1_account_login():
     # Активация пользователя
     response = account_api.put_v1_account_token(token=token)
     
-    print(response.status_code)
-    print(response.text)
+    """print(response.status_code)
+    print(response.text)"""
     assert response.status_code == 200, 'Пользователь не был активирован'
     
     # Авторизация пользователя
@@ -65,8 +64,8 @@ def test_v1_account_login():
     }
     
     response = login_api.post_v1_account_login(json_data=json_data)
-    print(response.status_code)
-    print(response.text)
+    """print(response.status_code)
+    print(response.text)"""
     assert response.status_code == 200, 'Пользователь не авторизован'
 
 

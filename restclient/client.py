@@ -4,6 +4,7 @@ from requests import session
 import structlog
 import uuid
 from json import JSONDecodeError
+import curlify
 
 
 class RestClient:
@@ -60,6 +61,8 @@ class RestClient:
         )
         # выполняем запрос
         rest_response = self.session.request(method=method, url=full_url, **kwargs)
+        curl = curlify.to_curl(rest_response.request)
+        print(curl)
         
         # логирование ответа сервера
         log.msg(
