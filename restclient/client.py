@@ -3,6 +3,7 @@
 from requests import session
 import structlog
 import uuid
+from json import JSONDecodeError
 
 
 class RestClient:
@@ -65,6 +66,15 @@ class RestClient:
             event='Response',
             status_code=rest_response.status_code,
             headers=rest_response.headers,
-            json=rest_response.json()
+            #json=rest_response.json()
+            json=self._get_json(rest_response)
         )
         return rest_response
+    
+    # при регистрации в ответе нет тела, обходим этот кейс
+    @staticmethod
+    def _get_json(rest_response):
+        try:
+            return rest_response.json()
+        except JSONDecodeError:
+            return{}
