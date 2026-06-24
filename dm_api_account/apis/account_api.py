@@ -59,8 +59,8 @@ class AccountApi(RestClient):
         :param json_data:
         :return:
         """
-        response = requests.put(
-            url = f'{self.host}/v1/account/email',
+        response = self.put(
+            path = f'/v1/account/email',
             json=json_data
         )
         
