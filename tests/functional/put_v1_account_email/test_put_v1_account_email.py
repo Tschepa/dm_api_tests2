@@ -7,6 +7,9 @@ from api_mailhog.apis.mailhog_api import MailhogApi
 from restclient.configuration import Configuration as MailhogConfiguration
 from restclient.configuration import Configuration as DmApiConfiguration
 
+from services.api_mailhog import MailHogApi
+from services.dm_api_account import DMApiAccount
+
 import structlog
 
 structlog.configure(
@@ -23,9 +26,8 @@ def test_v1_account_email():
     mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
     dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
     
-    account_api = AccountApi(configuration=dm_api_configuration)
-    login_api = LoginApi(configuration=dm_api_configuration)
-    mailhog_api = MailhogApi(configuration=mailhog_configuration)
+    account = DMApiAccount(configuration=dm_api_configuration)
+    mailhog = MailHogApi(configuration=mailhog_configuration)
     
     login = f'user_{uuid.uuid4().hex[:8]}'
     email = f'{login}@mail.ru'
@@ -37,7 +39,7 @@ def test_v1_account_email():
         'password': password,
     }
     
-    response = account_api.post_v1_account(json_data=json_data)
+    response = account.account_api.post_v1_account(json_data=json_data)
     """print(response.status_code)
     print(response.text)
     """
@@ -45,7 +47,7 @@ def test_v1_account_email():
     
     # Получение письма в почтовом сервере
     
-    response = mailhog_api.get_api_v2_messages()
+    response = mailhog.mailhog_api.get_api_v2_messages()
     """
     print(response.status_code)
     print(response.text)
@@ -58,7 +60,7 @@ def test_v1_account_email():
     assert token is not None, f'Токен для пользователя {login} не был получен'
     
     # Активация пользователя
-    response = account_api.put_v1_account_token(token=token)
+    response = account.account_api.put_v1_account_token(token=token)
     """
     print(response.status_code)
     print(response.text)
@@ -73,7 +75,7 @@ def test_v1_account_email():
         'rememberMe': True,
     }
     
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = account.login_api.post_v1_account_login(json_data=json_data)
     """print(response.status_code)
     print(response.text)
     """
@@ -89,7 +91,7 @@ def test_v1_account_email():
         'email': changed_email
     }
     
-    response = account_api.put_v1_account_email(json_data=json_data)
+    response = account.account_api.put_v1_account_email(json_data=json_data)
     """print(response.status_code)
     print(response.text)
     """
@@ -103,14 +105,14 @@ def test_v1_account_email():
         'rememberMe': True,
     }
     
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = account.login_api.post_v1_account_login(json_data=json_data)
     """print(response.status_code)
     print(response.text)
     """
     assert response.status_code == 403, 'Пользователь с измененным имейлом авторизован до активации нового токена'
     
     # Получение токена о смене имейла
-    response = mailhog_api.get_api_v2_messages()
+    response = mailhog.mailhog_api.get_api_v2_messages()
     
     """print(response.status_code)
     print(response.text)
@@ -121,7 +123,7 @@ def test_v1_account_email():
     assert token is not None, f'Токен об изменении имейла для пользователя {login} не был получен'
     
     # Активация пользователя с измененным имейлом
-    response = account_api.put_v1_account_token(token=token)
+    response = account.account_api.put_v1_account_token(token=token)
     
     """print(response.status_code)
     print(response.text)
@@ -136,7 +138,7 @@ def test_v1_account_email():
         'rememberMe': True,
     }
     
-    response = login_api.post_v1_account_login(json_data=json_data)
+    response = account.login_api.post_v1_account_login(json_data=json_data)
     """print(response.status_code)
     print(response.text)"""
     assert response.status_code == 200, 'Пользователь с новым имейлом не авторизован'
