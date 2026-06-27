@@ -1,8 +1,30 @@
+import time
 from json import loads
 
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
+def retrier(
+        function
+):
+    def wrapper(
+            *args,
+            **kwargs
+    ):
+        token = None
+        count = 0
+        while token is None:
+            print(f'Попытка получения токена номер {count}')
+            token = function(*args, **kwargs)
+            count += 1
+            if count == 5:
+                raise AssertionError('Превышено кол-во попыток получения акт-го токена')
+            if token:
+                return token
+            time.sleep(1)
+        return response
+    return wrapper
+    
 class AccountHelper:
     def __init__(
             self,
@@ -22,10 +44,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не был создан, {response.json()}'
         
-        response = self.mailhog.mailhog_api.get_api_v2_messages()
-        assert response.status_code == 200, 'Письма не были получены'
-        
-        token = self.get_token_by_login(login=login, response=response)
+        token = self.get_token_by_login(login=login)
         assert token is not None, f'Токен для пользователя {login} не был получен'
         
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
@@ -89,20 +108,23 @@ class AccountHelper:
         
         # Авторизация пользователя с измененным имейлом
         self.user_login(login=login, password=password)
-        
-    @staticmethod
+    
+    @retrier
     def get_token_by_login(
-            login,
-            response
+            self,
+            login
     ):
         token = None
+        time.sleep(3)
+        response = self.mailhog.mailhog_api.get_api_v2_messages()
+
         for item in response.json()['items']:
             try:
                 user_data = loads(item['Content']['Body'])
             except (JSONDecodeError, KeyError):
                 continue  # ← ФИКС: пропускаем плохие письма
             
-            user_login = user_data['Login']  # ← ОСТАЛОСЬ КАК БЫЛО
+            user_login = user_data['Login'] # ← ОСТАЛОСЬ КАК БЫЛО
             if user_login == login:
                 token = user_data['ConfirmationLinkUrl'].split('/')[-1]
                 print(user_login)

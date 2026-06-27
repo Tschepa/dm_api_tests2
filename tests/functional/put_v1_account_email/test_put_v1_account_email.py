@@ -40,7 +40,7 @@ def test_v1_account_email():
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
     
-    # Изменение имейла с активацией и последующей авторизацией
+    # Изменение имейла_403 авторизация_активация токена_авторизация
     changed_email = f'{login}@ya.ru'
     
     account_helper.change_password(login=login, password=password, changed_email=changed_email)
