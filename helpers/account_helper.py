@@ -124,7 +124,7 @@ class AccountHelper:
             except (JSONDecodeError, KeyError):
                 continue  # ← ФИКС: пропускаем плохие письма
             
-            user_login = user_data['Login'] # ← ОСТАЛОСЬ КАК БЫЛО
+            user_login = user_data['Login']  # ← ОСТАЛОСЬ КАК БЫЛО
             if user_login == login:
                 token = user_data['ConfirmationLinkUrl'].split('/')[-1]
                 print(user_login)

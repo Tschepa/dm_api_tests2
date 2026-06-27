@@ -8,10 +8,10 @@ def attempt(
                 *args,
                 **kwargs
         ):
-            print("----------")
+            print("-----------")
             print(n)
             func(*args, **kwargs)
-            print("----------")
+            print("-----------")
             return
         
         return wraps
