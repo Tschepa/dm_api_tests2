@@ -49,6 +49,47 @@ class AccountHelper:
         assert response.status_code == 200, 'Пользователь не авторизован'
         return response
     
+    def change_password(
+            self,
+            login:str,
+            password: str,
+            changed_email:str
+    ):
+        
+        json_data = {
+            'login': login,
+            'password': password,
+            'email': changed_email
+        }
+        
+        response = self.dm_account_api.account_api.put_v1_account_email(json_data=json_data)
+        assert response.status_code == 200, 'Имейл не изменен'
+        
+        # Авторизация с измененным имейлом
+        
+        json_data = {
+            'login': login,
+            'password': password,
+            'rememberMe': True,
+        }
+        
+        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        assert response.status_code == 403, 'Пользователь с измененным имейлом авторизован до активации нового токена'
+        
+        # Получение токена о смене имейла
+        response = self.mailhog.mailhog_api.get_api_v2_messages()
+        assert response.status_code == 200, 'Письмо об изменении имейла не было получено'
+        
+        token = self.get_token_by_login(login, response)
+        assert token is not None, f'Токен об изменении имейла для пользователя {login} не был получен'
+        
+        # Активация пользователя с измененным имейлом
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        assert response.status_code == 200, 'Пользователь с измененным имейлом не был активирован'
+        
+        # Авторизация пользователя с измененным имейлом
+        self.user_login(login=login, password=password)
+        
     @staticmethod
     def get_token_by_login(
             login,
