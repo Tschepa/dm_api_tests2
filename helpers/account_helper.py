@@ -99,7 +99,7 @@ class AccountHelper:
         response = self.mailhog.mailhog_api.get_api_v2_messages()
         assert response.status_code == 200, 'Письмо об изменении имейла не было получено'
         
-        token = self.get_token_by_login(login, response)
+        token = self.get_token_by_login(login=login)
         assert token is not None, f'Токен об изменении имейла для пользователя {login} не был получен'
         
         # Активация пользователя с измененным имейлом
