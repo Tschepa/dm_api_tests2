@@ -68,3 +68,19 @@ class AccountApi(RestClient):
         print(response.text)
         assert response.status_code == 200, 'Email не изменен'
         return response
+    
+    def get_v1_account(
+            self,
+            **kwargs
+    ):
+        """
+        Get current user
+
+        :param json_data:
+        :return:
+        """
+        response = self.get(
+            path=f'/v1/account',
+            **kwargs
+        )
+        return response

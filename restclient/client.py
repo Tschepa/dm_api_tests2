@@ -19,12 +19,16 @@ class RestClient:
         #self.host = host
         self.host = configuration.host
         #self.headers = headers
-        self.headers = configuration.headers
+        self.set_headers(configuration.headers)
         self.disable_log = configuration.disable_log #добавлено после создания класса конфигурации
         self.session = session() # иниц-ия сессии
         # иниц-я логгер с именем текущего модуля и добавь во все сообщения поле service='api', чтобы я знал, откуда пришёл лог.
         self.log = structlog.get_logger(__name__).bind(service='api')# иниц-ия логов
-        
+    
+    def set_headers(self, headers):
+        if headers:
+            self.session.headers.update(headers)
+      
     def post(
             self,
             path,
