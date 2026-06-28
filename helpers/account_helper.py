@@ -1,5 +1,8 @@
 import time
-from json import loads
+from json import (
+    loads,
+    JSONDecodeError,
+)
 
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
