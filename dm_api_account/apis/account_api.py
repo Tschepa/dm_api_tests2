@@ -87,8 +87,7 @@ class AccountApi(RestClient):
     
     def put_v1_account_password(
             self,
-            json_data,
-            **kwargs
+            json_data
     ):
         """
         Change registered user email
