@@ -40,7 +40,23 @@ def test_v1_account_email():
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
     
-    # Изменение имейла с активацией и последующей авторизацией
+    # Изменение имейла (с возвращением токена в хелпере)и последующая авторизация
     changed_email = f'{login}@ya.ru'
     
-    account_helper.change_password(login=login, password=password, changed_email=changed_email)
+    token = account_helper.change_email(login=login, password=password, changed_email=changed_email)
+    
+    # 403  при логине
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True
+    }
+    response = account_helper.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+    assert response.status_code == 403, 'Доступ запрещён до активации'
+    
+    # активация токена
+    response = account_helper.dm_account_api.account_api.put_v1_account_token(token=token)
+    assert response.status_code == 200, 'Пользователь с измененным имейлом не был активирован'
+    
+    # авторизация юзера с новым имейлом
+    account_helper.user_login(login=login, password=password)
