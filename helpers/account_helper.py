@@ -79,7 +79,7 @@ class AccountHelper:
         assert response.status_code == 200, 'Пользователь не авторизован'
         return response
     
-    def change_password(
+    def change_email(
             self,
             login:str,
             password: str,
@@ -124,21 +124,25 @@ class AccountHelper:
             self,
             login: str,
             token: str,
-            oldPassword: str,
+            password: str,
             newPassword: str
     ):
-   
+        auth_token = self.dm_account_api.account_api.session.headers.get("x-dm-auth-token")
         json_data = {
             'login': login,
             'token': token,
-            'password': oldPassword,
+            'password': password,
             'newPassword': newPassword
 
         }
-        
-        response = self.dm_account_api.account_api.put_v1_account_password(json_data=json_data)
+        headers = {
+            'X-Dm-Auth-Token': auth_token
+        }
+        response = self.dm_account_api.account_api.put_v1_account_password(json_data=json_data, headers=headers)
         assert response.status_code == 200, 'Пароль не изменен'
+        return response
         
+        """
         # Получение токена о смене пароля
         response = self.mailhog.mailhog_api.get_api_v2_messages()
         assert response.status_code == 200, 'Письмо об изменении пароля не было получено'
@@ -146,7 +150,11 @@ class AccountHelper:
         token = self.get_token_by_login(login, response)
         assert token is not None, f'Токен об изменении пароля для пользователя {login} не был получен'
         return token
-        
+        # Активация токена
+    
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        assert response.status_code == 200, 'Пользователь с измененным имейлом не был активирован'
+        """
     
     @retrier
     def get_token_by_login(

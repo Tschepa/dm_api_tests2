@@ -38,9 +38,10 @@ def test_v1_account_email():
     
     # Регистрация пользователя
     account_helper.register_new_user(login=login, password=password, email=email)
-    account_helper.user_login(login=login, password=password)
+    auth_token = account_helper.user_login(login=login, password=password)
+    return auth_token
     
     # Изменение имейла_403 авторизация_активация токена_авторизация
     changed_email = f'{login}@ya.ru'
     
-    account_helper.change_password(login=login, password=password, changed_email=changed_email)
+    account_helper.change_email(login=login, password=password, changed_email=changed_email)
