@@ -40,7 +40,7 @@ def test_v1_account_email():
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
     
-    # Изменение имейла (с возвращением токена в хелпере)и последующая авторизация
+    # Изменение имейла (с возвращением токена в хелпере)
     changed_email = f'{login}@ya.ru'
     
     token = account_helper.change_email(login=login, password=password, changed_email=changed_email)

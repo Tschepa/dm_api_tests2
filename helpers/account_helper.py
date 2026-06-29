@@ -83,13 +83,15 @@ class AccountHelper:
         token = self.get_token_by_login(login, response)
         assert token is not None, f'Токен об изменении имейла для пользователя {login} не был получен'
         return token
-        
+
         """ ПЕРЕНЕСЕНО В ТЕСТ
+        
         # Активация пользователя с измененным имейлом
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, 'Пользователь с измененным имейлом не был активирован'
         """
         """ ПЕРЕНЕСЕНО В ТЕСТ
+        
         # Авторизация пользователя с измененным имейлом
         self.user_login(login=login, password=password)"""
         
