@@ -45,7 +45,7 @@ def test_v1_account_email():
     
     token = account_helper.change_email(login=login, password=password, changed_email=changed_email)
     
-    # 403  при логине
+    # 403 при логине
     json_data = {
         'login': login,
         'password': password,
@@ -54,9 +54,9 @@ def test_v1_account_email():
     response = account_helper.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
     assert response.status_code == 403, 'Доступ запрещён до активации'
     
-    # активация токена
+    # Активация токена
     response = account_helper.dm_account_api.account_api.put_v1_account_token(token=token)
     assert response.status_code == 200, 'Пользователь с измененным имейлом не был активирован'
     
-    # авторизация юзера с новым имейлом
+    # Авторизация юзера с новым имейлом
     account_helper.user_login(login=login, password=password)
