@@ -84,3 +84,22 @@ class AccountApi(RestClient):
             **kwargs
         )
         return response
+    
+    def put_v1_account_password(
+            self,
+            json_data
+    ):
+        """
+        Change registered user email
+        :param json_data:
+        :return:
+        """
+        response = self.put(
+            path=f'/v1/account/password',
+            json=json_data
+        )
+        
+        print(response.status_code)
+        print(response.text)
+        assert response.status_code == 200, 'Password не изменен'
+        return response

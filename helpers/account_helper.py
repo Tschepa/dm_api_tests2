@@ -120,6 +120,34 @@ class AccountHelper:
         # Авторизация пользователя с измененным имейлом
         self.user_login(login=login, password=password)
     
+    def change_password(
+            self,
+            login: str,
+            token: str,
+            oldPassword: str,
+            newPassword: str
+    ):
+   
+        json_data = {
+            'login': login,
+            'token': token,
+            'password': oldPassword,
+            'newPassword': newPassword
+
+        }
+        
+        response = self.dm_account_api.account_api.put_v1_account_password(json_data=json_data)
+        assert response.status_code == 200, 'Пароль не изменен'
+        
+        # Получение токена о смене пароля
+        response = self.mailhog.mailhog_api.get_api_v2_messages()
+        assert response.status_code == 200, 'Письмо об изменении пароля не было получено'
+        
+        token = self.get_token_by_login(login, response)
+        assert token is not None, f'Токен об изменении пароля для пользователя {login} не был получен'
+        return token
+        
+    
     @retrier
     def get_token_by_login(
             self,
