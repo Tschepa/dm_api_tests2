@@ -65,8 +65,8 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_email(json_data=json_data)
         assert response.status_code == 200, 'Имейл не изменен'
         """ ПЕРЕНЕСЕНО В ТЕСТ
-        # Авторизация с измененным имейлом
         
+        # Авторизация с измененным имейлом
         json_data = {
             'login': login,
             'password': password,

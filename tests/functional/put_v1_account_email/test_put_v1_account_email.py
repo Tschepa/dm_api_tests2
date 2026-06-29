@@ -45,7 +45,7 @@ def test_v1_account_email():
     
     token = account_helper.change_email(login=login, password=password, changed_email=changed_email)
     
-    # 403 при логине
+    # 403 при авторизации
     json_data = {
         'login': login,
         'password': password,
