@@ -79,6 +79,17 @@ class AccountHelper:
         assert response.status_code == 200, 'Пользователь не авторизован'
         return response
     
+    def activate_user(
+            self,
+            token: str
+            ):
+        """
+        Активация пользователя по токену
+        """
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        assert response.status_code == 200, 'Активация не удалась'
+        return response
+    
     def change_email(
             self,
             login:str,
