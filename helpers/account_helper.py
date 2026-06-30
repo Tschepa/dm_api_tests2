@@ -164,11 +164,12 @@ class AccountHelper:
         )
     
     def logout_all(
-            self
-            ):
+            self,
+            headers = None
+    ):
         """Выход из системы на всех устройствах"""
         
-        response = self.dm_account_api.login_api.delete_v1_account_login_all()
+        response = self.dm_account_api.login_api.delete_v1_account_login_all(headers=headers)
         assert response.status_code == 204, 'Выход на всех устройствах не выполнен'
         return response
     

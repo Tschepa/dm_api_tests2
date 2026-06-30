@@ -1,10 +1,5 @@
 from json import loads, JSONDecodeError
 import uuid
-
-from conftest import (
-    account_helper,
-    mailhog_api,
-)
 from dm_api_account.apis.account_api import AccountApi
 from dm_api_account.apis.login_api import LoginApi
 from api_mailhog.apis.mailhog_api import MailhogApi
@@ -28,13 +23,17 @@ structlog.configure(
     ]
 )
 
-def test_delete_v1_account_login_all(account_helper, prepare_user):
-    mailhog_configuration  = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False')
+
+def test_delete_v1_account_login_all(
+        account_helper,
+        prepare_user
+        ):
+    mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
     dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
     
     account = DMApiAccount(configuration=dm_api_configuration)
     mailhog = MailHogApi(configuration=mailhog_configuration)
-
+    
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
     
     login = prepare_user.login
@@ -43,3 +42,9 @@ def test_delete_v1_account_login_all(account_helper, prepare_user):
     
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.auth_client(login=login, password=password)
+    
+    response = account_helper.dm_account_api.login_api.delete_v1_account_login_all()
+    assert response.status_code == 204, 'Юзер разлогинен на всех девайсах'
+    
+    response = account_helper.dm_account_api.account_api.get_v1_account()
+    assert response.status_code == 401, 'Токен недействителен'
