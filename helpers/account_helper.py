@@ -1,5 +1,5 @@
 import time
-from retry import retry
+from retrying import retry
 from json import (
     loads,
     JSONDecodeError,
@@ -155,7 +155,7 @@ class AccountHelper:
         )
         token = self.get_token(login=login, token_type="reset")
         self.dm_account_api.account_api.put_v1_account_password(
-            json={
+            json_data={
                 "login": login,
                 "oldPassword": old_password,
                 "newPassword": new_password,

@@ -103,3 +103,18 @@ class AccountApi(RestClient):
         print(response.text)
         assert response.status_code == 200, 'Password не изменен'
         return response
+    
+    def post_v1_account_password(
+            self,
+            json,
+            headers=None
+            ):
+        response = self.post(
+            path='/v1/account/password',
+            json=json,
+            headers=headers
+        )
+        print(response.status_code)
+        print(response.text)
+        assert response.status_code == 200, 'Запрос на смену пароля не отправлен'
+        return response
