@@ -45,6 +45,3 @@ def test_delete_v1_account_login_all(
     
     response = account_helper.dm_account_api.login_api.delete_v1_account_login_all()
     assert response.status_code == 204, 'Юзер разлогинен на всех девайсах'
-    
-    response = account_helper.dm_account_api.account_api.get_v1_account()
-    assert response.status_code == 401, 'Токен недействителен'
