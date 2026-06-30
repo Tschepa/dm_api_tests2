@@ -163,6 +163,15 @@ class AccountHelper:
             }
         )
     
+    def logout_all(
+            self
+            ):
+        """Выход из системы на всех устройствах"""
+        
+        response = self.dm_account_api.login_api.delete_v1_account_login_all()
+        assert response.status_code == 204, 'Выход на всех устройствах не выполнен'
+        return response
+    
     @retrier
     def get_token_by_login(
             self,

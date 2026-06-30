@@ -38,3 +38,14 @@ class LoginApi(RestClient):
             headers = headers
         )
         return response
+    
+    def deelete_v1_account_login_all(
+            self,
+            headers
+    ):
+        response = self.delete(
+            path='/v1/account/login/all',
+            headers = headers
+        )
+        
+        return response
