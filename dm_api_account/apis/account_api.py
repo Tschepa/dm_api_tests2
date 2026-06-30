@@ -118,3 +118,19 @@ class AccountApi(RestClient):
         print(response.text)
         assert response.status_code == 200, 'Запрос на смену пароля не отправлен'
         return response
+    
+    def delete_v1_account(
+            self,
+            **kwargs
+    ):
+        """
+        Get current user
+
+        :param json_data:
+        :return:
+        """
+        response = self.delete(
+            path=f'/v1/account',
+            **kwargs
+        )
+        return response
