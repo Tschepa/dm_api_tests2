@@ -43,12 +43,7 @@ def test_v1_account_password(account_helper, prepare_user):
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
     
-    # Забираем токен из авторизации
-    """response = account_helper.mailhog.mailhog_api.get_api_v2_messages()
-    token = account_helper.get_token_by_login(login=login)"""
-    account_helper.activate_user(token=token)
-    
     account_helper.change_password(login=login, token=token, password=password, newPassword = newPassword)
     
-    # Авторизация юзера с новым имейлом
+    # Авторизация юзера с новым паролем
     account_helper.user_login(login=login, password=password)
