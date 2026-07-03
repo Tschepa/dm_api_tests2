@@ -63,9 +63,8 @@ class AccountHelper:
         token = self.get_token_by_login(login=login)
         assert token is not None, f'Токен для пользователя {login} не был получен'
         
-        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        response = self.activate_user(token=token)
         assert response.status_code == 200, 'Пользователь не был активирован'
-        
         return response
     
     def user_login(
@@ -179,7 +178,7 @@ class AccountHelper:
             login
     ):
         token = None
-        time.sleep(3)
+        time.sleep(1)
         response = self.mailhog.mailhog_api.get_api_v2_messages()
 
         for item in response.json()['items']:

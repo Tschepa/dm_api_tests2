@@ -22,24 +22,15 @@ structlog.configure(
         )
     ]
 )
-def test_v1_account_email():
+def test_v1_account_email(account_helper, prepare_user):
     
-    mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
-    dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
-    
-    account = DMApiAccount(configuration=dm_api_configuration)
-    mailhog = MailHogApi(configuration=mailhog_configuration)
-    
-    account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
-    
-    login = f'user_{uuid.uuid4().hex[:8]}'
-    email = f'{login}@mail.ru'
-    password = '12345678'
+    login = prepare_user.login
+    email = prepare_user.email
+    password = prepare_user.password
     
     # Регистрация пользователя
     account_helper.register_new_user(login=login, password=password, email=email)
     auth_token = account_helper.user_login(login=login, password=password)
-    return auth_token
     
     # Изменение имейла_403 авторизация_активация токена_авторизация
     changed_email = f'{login}@ya.ru'

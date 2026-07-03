@@ -26,13 +26,6 @@ structlog.configure(
 
 
 def test_v1_account_password(account_helper, prepare_user):
-    mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
-    dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
-    
-    account = DMApiAccount(configuration=dm_api_configuration)
-    mailhog = MailHogApi(configuration=mailhog_configuration)
-    
-    account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
     
     login = prepare_user.login
     email = prepare_user.email
@@ -47,5 +40,3 @@ def test_v1_account_password(account_helper, prepare_user):
     
     # Авторизация юзера с новым паролем
     account_helper.user_login(login=login, password=new_password)
-    
-    print(login, new_password)

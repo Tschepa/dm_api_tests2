@@ -45,8 +45,6 @@ class AccountApi(RestClient):
         response = self.put(
             path=f'/v1/account/{token}',
         )
-        print(response.status_code)
-        print(response.text)
         assert response.status_code == 200, 'Пльзователь не активирован'
         return response
     
@@ -64,8 +62,6 @@ class AccountApi(RestClient):
             json=json_data
         )
         
-        print(response.status_code)
-        print(response.text)
         assert response.status_code == 200, 'Email не изменен'
         return response
     
@@ -98,9 +94,6 @@ class AccountApi(RestClient):
             path=f'/v1/account/password',
             json=json_data
         )
-        
-        print(response.status_code)
-        print(response.text)
         assert response.status_code == 200, 'Password не изменен'
         return response
     
@@ -114,8 +107,6 @@ class AccountApi(RestClient):
             json=json,
             headers=headers
         )
-        print(response.status_code)
-        print(response.text)
         assert response.status_code == 200, 'Запрос на смену пароля не отправлен'
         return response
     

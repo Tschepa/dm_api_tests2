@@ -28,13 +28,6 @@ def test_delete_v1_account_login_all(
         account_helper,
         prepare_user
         ):
-    mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
-    dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
-    
-    account = DMApiAccount(configuration=dm_api_configuration)
-    mailhog = MailHogApi(configuration=mailhog_configuration)
-    
-    account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
     
     login = prepare_user.login
     email = prepare_user.email

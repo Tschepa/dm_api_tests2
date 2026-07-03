@@ -21,19 +21,11 @@ structlog.configure(
     ]
 )
 
-def test_v1_account_login():
+def test_v1_account_login(account_helper, prepare_user):
+    login = prepare_user.login
+    password = prepare_user.password
+    email = prepare_user.email
+    
     # Регистрация пользователя
-    mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
-    dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
-    
-    account = DMApiAccount(configuration=dm_api_configuration)
-    mailhog = MailHogApi(configuration=mailhog_configuration)
-    
-    account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog)
-    
-    login = f'user_{uuid.uuid4().hex[:8]}'
-    email = f'{login}@mail.ru'
-    password = '12345678'
-    
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
