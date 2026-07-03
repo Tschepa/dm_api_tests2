@@ -60,9 +60,8 @@ class AccountHelper:
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не был создан, {response.json()}'
         
-        token = self.get_token_by_login(login=login)
+        token = self.get_token(login=login, token_type="activation")
         assert token is not None, f'Токен для пользователя {login} не был получен'
-        
         response = self.activate_user(token=token)
         assert response.status_code == 200, 'Пользователь не был активирован'
         return response
@@ -125,7 +124,7 @@ class AccountHelper:
         response = self.mailhog.mailhog_api.get_api_v2_messages()
         assert response.status_code == 200, 'Письмо об изменении имейла не было получено'
         
-        token = self.get_token_by_login(login=login)
+        token = self.get_token(login=login, token_type="activation")
         assert token is not None, f'Токен об изменении имейла для пользователя {login} не был получен'
         
         # Активация пользователя с измененным имейлом
@@ -172,7 +171,7 @@ class AccountHelper:
         assert response.status_code == 204, 'Выход на всех устройствах не выполнен'
         return response
     
-    @retrier
+    """@retrier
     def get_token_by_login(
             self,
             login
@@ -193,7 +192,7 @@ class AccountHelper:
                 print(user_login)
                 print(token)
                 assert token is not None, 'Письмо с токеном о не пришло'
-        return token
+        return token"""
     
     @retry(
         stop_max_attempt_number=5,
@@ -216,7 +215,11 @@ class AccountHelper:
         token = None
         response = self.mailhog.mailhog_api.get_api_v2_messages()
         for item in response.json()["items"]:
-            user_data = loads(item["Content"]["Body"])
+            try:
+                user_data = loads(item["Content"]["Body"])
+            except (JSONDecodeError, KeyError):
+                continue
+                
             user_login = user_data["Login"]
             activation_token = user_data.get("ConfirmationLinkUrl")
             reset_token = user_data.get("ConfirmationLinkUri")

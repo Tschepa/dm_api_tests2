@@ -2,6 +2,10 @@ from collections import namedtuple
 from datetime import datetime
 from json import loads, JSONDecodeError
 import uuid
+from collections import namedtuple
+from datetime import datetime
+from json import loads, JSONDecodeError
+import uuid
 
 import pytest
 
