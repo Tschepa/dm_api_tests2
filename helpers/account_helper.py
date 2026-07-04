@@ -5,6 +5,7 @@ from json import (
     JSONDecodeError,
 )
 
+from dm_api_account.models.registration import Registration
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -49,13 +50,18 @@ class AccountHelper:
         self.dm_account_api.login_api.set_headers(token)
         
     def register_new_user(self, login:str, password: str, email:str):
-        json_data = {
+        """json_data = {
             'login': login,
             'email': email,
             'password': password,
-        }
+        }"""
+        registration = Registration(
+            login=login,
+            email=email,
+            password=password
+        )
         
-        response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
+        response = self.dm_account_api.account_api.post_v1_account(registration=registration)
         assert response.status_code == 201, f'Пользователь не был создан, {response.json()}'
         
         start_time = time.time()
