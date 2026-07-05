@@ -5,7 +5,10 @@ from json import (
     JSONDecodeError,
 )
 
+from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.registration import Registration
+from dm_api_account.models.user_envelope import UserEnvelope
+
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -62,7 +65,9 @@ class AccountHelper:
         )
         
         response = self.dm_account_api.account_api.post_v1_account(registration=registration)
-        assert response.status_code == 201, f'Пользователь не был создан, {response.json()}'
+        assert (
+            response.status_code == 201
+        ), f'Пользователь не был создан, {response.json()}'
         
         start_time = time.time()
         token = self.get_token(login=login, token_type="activation")
@@ -71,34 +76,37 @@ class AccountHelper:
         
         assert token is not None, f'Токен для пользователя {login} не был получен'
         response = self.activate_user(token=token)
-        assert response.status_code == 200, 'Пользователь не был активирован'
         return response
     
     def user_login(
             self,
             login:str,
             password:str,
-            remember_me: bool = True
+            remember_me: bool = True,
+            validate_response = False
     ):
-        json_data = {
-            'login': login,
-            'password': password,
-            'remember_me': True,
-        }
+        login_credentials = LoginCredentials(
+            login=login,
+            password=password,
+            rememberMe=remember_me
+        )
         
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
-        assert response.headers["x-dm-auth-token"], 'Токен для пользователя не был получен'
+        response = self.dm_account_api.login_api.post_v1_account_login(
+            login_credentials=login_credentials,
+            validate_response=validate_response
+        )
+        assert response.headers['x-dm-auth-token'], 'Токен для пользователя не был получен'
         assert response.status_code == 200, 'Пользователь не авторизован'
         return response
     
     def activate_user(
             self,
-            token: str
-            ):
+            token: str,
+        ):
         """
         Активация пользователя по токену
         """
-        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=False)
         assert response.status_code == 200, 'Активация не удалась'
         return response
     
@@ -234,7 +242,9 @@ class AccountHelper:
             reset_token = user_data.get("ConfirmationLinkUri")
             if user_login == login and activation_token and token_type == "activation":
                 token = activation_token.split("/")[-1]
+                break
             elif user_login == login and reset_token and token_type == "reset":
                 token = reset_token.split("/")[-1]
+                break
         
         return token

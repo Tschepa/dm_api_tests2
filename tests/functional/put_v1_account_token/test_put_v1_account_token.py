@@ -23,7 +23,7 @@ structlog.configure(
 )
 
 
-def test_v1_account_token():
+def test_put_v1_account_token():
     
     # Регистрация пользователя
     mailhog_configuration = MailhogConfiguration(host='http://185.185.143.231:5025', disable_log=False)
