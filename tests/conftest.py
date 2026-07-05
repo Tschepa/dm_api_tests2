@@ -71,7 +71,8 @@ def prepare_user():
     '''now = datetime.now()
     date = now.strftime('%d_%m_%Y_%H_%M_%S')
     login = f'user_{date}'
-    email = f'{login}@mail.ru'''
+    email = f'{login}@mail.ru'
+    '''
     login = f"user_{uuid.uuid4().hex[:8]}"
     email = f"{login}@mail.ru"
     password = '12345678'

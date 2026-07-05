@@ -11,6 +11,7 @@ from restclient.configuration import Configuration as DmApiConfiguration
 
 from services.api_mailhog import MailHogApi
 from services.dm_api_account import DMApiAccount
+from helpers.account_helper import AccountHelper
 
 import structlog
 
@@ -25,7 +26,7 @@ structlog.configure(
 )
 
 
-def test_v1_account_password(account_helper, prepare_user):
+def test_put_v1_account_password(account_helper, prepare_user):
     
     login = prepare_user.login
     email = prepare_user.email
