@@ -2,10 +2,6 @@ from collections import namedtuple
 from datetime import datetime
 from json import loads, JSONDecodeError
 import uuid
-from collections import namedtuple
-from datetime import datetime
-from json import loads, JSONDecodeError
-import uuid
 
 import pytest
 
@@ -72,10 +68,12 @@ def prepare_user():
     date = now.strftime('%d_%m_%Y_%H_%M_%S')
     login = f'user_{date}'
     email = f'{login}@mail.ru'
+    password = '12345678'
     '''
     login = f"user_{uuid.uuid4().hex[:8]}"
     email = f"{login}@mail.ru"
     password = '12345678'
+    
     User = namedtuple('User', ['login', 'password', 'email'])
     user = User(login=login, password=password, email=email)
     return user

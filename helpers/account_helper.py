@@ -128,13 +128,13 @@ class AccountHelper:
         
         # Авторизация с измененным имейлом
         
-        json_data = {
-            'login': login,
-            'password': password,
-            'rememberMe': True,
-        }
-        
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        login_credentials = LoginCredentials(
+            login=login,
+            password=password,
+            rememberMe=True
+        )
+        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,
+        validate_response=False)
         assert response.status_code == 403, 'Пользователь с измененным имейлом авторизован до активации нового токена'
         
         # Получение токена о смене имейла
@@ -242,9 +242,6 @@ class AccountHelper:
             reset_token = user_data.get("ConfirmationLinkUri")
             if user_login == login and activation_token and token_type == "activation":
                 token = activation_token.split("/")[-1]
-                break
             elif user_login == login and reset_token and token_type == "reset":
                 token = reset_token.split("/")[-1]
-                break
-        
         return token
