@@ -21,31 +21,42 @@ class Rating(BaseModel):
     quality: int
     quantity: int
 
+class BbParseMode(str, Enum):
+    COMMON = 'Common',
+    INFO = 'Info',
+    POST = 'Post',
+    CHAT = 'Chat'
 
-class Info(BaseModel):
+class InfoBbText(BaseModel):
     value: str
-    parse_mode: str = Field(alias='parseMode')
+    parse_mode: List[BbParseMode]
 
 
-class Paging(BaseModel):
-    posts_per_page: int = Field(alias='postsPerPage')
-    comments_per_page: int = Field(alias='commentsPerPage')
-    topics_per_page: int = Field(alias='topicsPerPage')
-    messages_per_page: int = Field(alias='messagesPerPage')
-    entities_per_page: int = Field(alias='entitiesPerPage')
+class PagingSettings(BaseModel):
+    posts_per_page: int = Field(None, alias='postsPerPage')
+    comments_per_page: int = Field(None, alias='commentsPerPage')
+    topics_per_page: int = Field(None, alias='topicsPerPage')
+    messages_per_page: int = Field(None, alias='messagesPerPage')
+    entities_per_page: int = Field(None, alias='entitiesPerPage')
 
+class ColorSchema(str, Enum):
+    Modern = 'Modern',
+    Pale = 'Pale',
+    Classic = 'Classic',
+    ClassicPale = 'ClassicPale',
+    Night = 'Night'
 
-class Settings(BaseModel):
-    color_schema: str = Field(alias='colorSchema')
-    nanny_greetings_message: str = Field(alias='nannyGreetingsMessage')
+class UserSettings(BaseModel):
+    color_schema: List[ColorSchema]
+    nanny_greetings_message: str = Field(None, alias='nannyGreetingsMessage')
     paging: Paging
 
 
 class UserDetails(BaseModel):
     login: str
     roles: List[UserRole]
-    medium_picture_url: str = Field(alias='mediumPictureUrl')
-    small_picture_url: str = Field(alias='smallPictureUrl')
+    medium_picture_url: str = Field(None, alias='mediumPictureUrl')
+    small_picture_url: str = Field(None, alias='smallPictureUrl')
     status: str = Field(None, alias='status')
     rating: Rating
     online: datetime = Field(None, alias='online')
@@ -54,8 +65,8 @@ class UserDetails(BaseModel):
     registration: datetime = Field(None, alias='registration')
     icq: str
     skype: str
-    original_picture_url: str = Field(alias='originalPictureUrl')
-    info: Info
+    original_picture_url: str = Field(None, alias='originalPictureUrl')
+    info: InfoBbText
     settings: Settings
 
 

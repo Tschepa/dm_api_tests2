@@ -1,6 +1,8 @@
 import requests
 
 from dm_api_account.models.registration import Registration
+from dm_api_account.models.user_details_envelope import UserDetailsEnvelope
+from dm_api_account.models.user_envelope import UserEnvelope
 from restclient.client import RestClient
 
 
@@ -15,9 +17,9 @@ class AccountApi(RestClient):
         УДАЛЕНО, так как наслодовали у RestClient, пкм добавили импорт
     """
     def post_v1_account(
-            self,
-            registration: Registration
-            ):
+        self,
+        registration: Registration
+    ):
         """
                 Register new user
 
@@ -32,9 +34,10 @@ class AccountApi(RestClient):
         return response
     
     def put_v1_account_token(
-            self,
-            token
-            ):
+        self,
+        token,
+        validate_response = True
+    ):
         """
         Activate registered user
         :param token:
@@ -43,13 +46,14 @@ class AccountApi(RestClient):
         response = self.put(
             path=f'/v1/account/{token}',
         )
-        assert response.status_code == 200, 'Пльзователь не активирован'
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
     
     def put_v1_account_email(
-            self,
-            json_data
-            ):
+        self,
+        json_data
+    ):
         """
         Change registered user email
         :param json_data:
@@ -64,8 +68,8 @@ class AccountApi(RestClient):
         return response
     
     def get_v1_account(
-            self,
-            **kwargs
+        self,
+        **kwargs
     ):
         """
         Get current user
@@ -77,11 +81,12 @@ class AccountApi(RestClient):
             path=f'/v1/account',
             **kwargs
         )
+        #UserDetailsEnvelope(**response.json())
         return response
     
     def put_v1_account_password(
-            self,
-            json_data
+        self,
+        json_data
     ):
         """
         Change registered user email
@@ -96,10 +101,10 @@ class AccountApi(RestClient):
         return response
     
     def post_v1_account_password(
-            self,
-            json,
-            headers=None
-            ):
+        self,
+        json,
+        headers=None
+    ):
         response = self.post(
             path='/v1/account/password',
             json=json,
