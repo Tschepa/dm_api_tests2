@@ -36,5 +36,5 @@ def test_delete_v1_account_login(account_helper, prepare_user):
     response = account_helper.dm_account_api.login_api.delete_v1_account_login()
     assert response.status_code == 204, 'Юзер разлогинен'
     
-    response = account_helper.dm_account_api.account_api.get_v1_account()
+    response = account_helper.dm_account_api.account_api.get_v1_account(validate_response=False)
     assert response.status_code == 401, 'Токен недействителен'
