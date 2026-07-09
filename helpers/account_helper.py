@@ -5,8 +5,11 @@ from json import (
     JSONDecodeError,
 )
 
+from dm_api_account.models.change_email import ChangeEmail
+from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.registration import Registration
+from dm_api_account.models.reset_password import ResetPassword
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -104,24 +107,25 @@ class AccountHelper:
             changed_email:str
     ):
         
-        json_data = {
-            'login': login,
-            'password': password,
-            'email': changed_email
-        }
+        change_data = ChangeEmail(
+            login=login,
+            password=password,
+            email=changed_email
+        )
         
-        response = self.dm_account_api.account_api.put_v1_account_email(json_data=json_data)
+        response = self.dm_account_api.account_api.put_v1_account_email(change_email=change_data)
         assert response.status_code == 200, 'Имейл не изменен'
         
         # Авторизация с измененным имейлом
         
-        json_data = {
-            'login': login,
-            'password': password,
-            'rememberMe': True,
-        }
+        login_credentials = LoginCredentials(
+            login=login,
+            password=password,
+            remember_me=True
+        )
         
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,
+        validate_response=False)
         assert response.status_code == 403, 'Пользователь с измененным имейлом авторизован до активации нового токена'
         
         # Получение токена о смене имейла
@@ -132,7 +136,7 @@ class AccountHelper:
         assert token is not None, f'Токен об изменении имейла для пользователя {login} не был получен'
         
         # Активация пользователя с измененным имейлом
-        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token, validate_response=False)
         assert response.status_code == 200, 'Пользователь с измененным имейлом не был активирован'
         
         # Авторизация пользователя с измененным имейлом
@@ -147,22 +151,20 @@ class AccountHelper:
             ):
         token = self.user_login(login=login, password=old_password)
         self.dm_account_api.account_api.post_v1_account_password(
-            json={
-                "login": login,
-                "email": email
-            },
+            reset_password=ResetPassword(login=login, email=email),
             headers={
                 "x-dm-auth-token": token.headers["x-dm-auth-token"]
-            },
+            }
         )
         token = self.get_token(login=login, token_type="reset")
+        change_data = ChangePassword(
+            login=login,
+            token=token,
+            oldPassword=old_password,
+            newPassword=new_password
+        )
         self.dm_account_api.account_api.put_v1_account_password(
-            json_data={
-                "login": login,
-                "oldPassword": old_password,
-                "newPassword": new_password,
-                "token": token
-            }
+            change_password=change_data
         )
     
     def logout_all(

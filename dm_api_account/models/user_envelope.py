@@ -9,11 +9,11 @@ from pydantic import (
 from typing import List, Optional
 
 class UserRole(str, Enum):
-    GUEST = 'Guest',
-    PLAYER = 'Player',
-    ADMINISTRATOR = 'Administrator',
-    NANNYMODERATOR = 'NannyModerator',
-    REGULARMODERATOR = 'NannyModerator',
+    GUEST = 'Guest'
+    PLAYER = 'Player'
+    ADMINISTRATOR = 'Administrator'
+    NANNYMODERATOR = 'NannyModerator'
+    REGULARMODERATOR = 'RegularModerator'
     SENIORMODERATOR = 'SeniorModerator'
 class Rating(BaseModel):
     enabled: bool
