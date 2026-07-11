@@ -116,7 +116,8 @@ class AccountApi(RestClient):
     def post_v1_account_password(
         self,
         reset_password:ResetPassword,
-        headers=None
+        headers=None,
+        validate_response = True
     ):
         response = self.post(
             path='/v1/account/password',
@@ -124,6 +125,8 @@ class AccountApi(RestClient):
             headers=headers
         )
         assert response.status_code == 200, 'Запрос на смену пароля не отправлен'
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
     
     def delete_v1_account_login(

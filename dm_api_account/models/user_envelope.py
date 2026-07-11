@@ -6,7 +6,14 @@ from pydantic import (
     Field,
     ConfigDict
 )
-from typing import List, Optional
+from typing import (
+    List,
+    Optional,
+    Dict,
+    Union,
+    Any,
+)
+
 
 class UserRole(str, Enum):
     GUEST = 'Guest'
@@ -35,4 +42,4 @@ class User(BaseModel):
 class UserEnvelope(BaseModel):
     model_config = ConfigDict(extra='forbid')
     resource: Optional[User] = None
-    metadata: Optional[str] = None
+    metadata: Optional[Union[str, Dict[str, Any]]] = None

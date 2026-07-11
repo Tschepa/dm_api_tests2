@@ -161,7 +161,8 @@ class AccountHelper:
             reset_password=ResetPassword(login=login, email=email),
             headers={
                 "x-dm-auth-token": token.headers["x-dm-auth-token"]
-            }
+            },
+            validate_response = validate_response
         )
         token = self.get_token(login=login, token_type="reset")
         change_data = ChangePassword(
