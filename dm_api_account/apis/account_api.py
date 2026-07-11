@@ -55,7 +55,8 @@ class AccountApi(RestClient):
     
     def put_v1_account_email(
         self,
-        change_email: ChangeEmail
+        change_email: ChangeEmail,
+    validate_response=True
     ):
         """
         Change registered user email
@@ -68,6 +69,8 @@ class AccountApi(RestClient):
         )
         
         assert response.status_code == 200, 'Email не изменен'
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
     
     def get_v1_account(
@@ -106,8 +109,7 @@ class AccountApi(RestClient):
         if validate_response:
             return UserEnvelope(**response.json())
         return response
-        assert response.status_code == 200, 'Password не изменен'
-        return response
+
     
     def post_v1_account_password(
         self,

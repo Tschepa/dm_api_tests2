@@ -110,7 +110,8 @@ class AccountHelper:
             self,
             login:str,
             password: str,
-            changed_email:str
+            changed_email:str,
+            validate_response=True
     ):
         
         change_data = ChangeEmail(
@@ -119,8 +120,7 @@ class AccountHelper:
             email=changed_email
         )
         
-        response = self.dm_account_api.account_api.put_v1_account_email(change_email=change_data)
-        assert response.status_code == 200, 'Имейл не изменен'
+        response = self.dm_account_api.account_api.put_v1_account_email(change_email=change_data, validate_response=validate_response)
         
         # Авторизация с измененным имейлом
         
@@ -153,8 +153,9 @@ class AccountHelper:
             login: str,
             email: str,
             old_password: str,
-            new_password: str
-            ):
+            new_password: str,
+            validate_response = True
+        ):
         token = self.user_login(login=login, password=old_password)
         self.dm_account_api.account_api.post_v1_account_password(
             reset_password=ResetPassword(login=login, email=email),
@@ -169,9 +170,11 @@ class AccountHelper:
             oldPassword=old_password,
             newPassword=new_password
         )
-        self.dm_account_api.account_api.put_v1_account_password(
-            change_password=change_data
+        response = self.dm_account_api.account_api.put_v1_account_password(
+            change_password=change_data,
+            validate_response=validate_response
         )
+        return response
     
     def logout_all(
             self,
