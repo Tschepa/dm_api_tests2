@@ -91,7 +91,8 @@ class AccountApi(RestClient):
     
     def put_v1_account_password(
         self,
-        change_password: ChangePassword
+        change_password: ChangePassword,
+        validate_response=True
     ):
         """
         Change registered user email
@@ -102,6 +103,9 @@ class AccountApi(RestClient):
             path=f'/v1/account/password',
             json=change_password.model_dump(by_alias=True)
         )
+        if validate_response:
+            return UserEnvelope(**response.json())
+        return response
         assert response.status_code == 200, 'Password не изменен'
         return response
     
