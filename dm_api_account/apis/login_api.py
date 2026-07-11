@@ -6,7 +6,7 @@ from restclient.client import RestClient
 
 
 class LoginApi(RestClient):
-    """def __init__(
+    """ def __init__(
             self,
             host,
             headers=None

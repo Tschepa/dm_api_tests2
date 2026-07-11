@@ -17,7 +17,7 @@ class AccountApi(RestClient):
         ):
         self.host = host
         self.headers = headers
-        УДАЛЕНО, так как наслодовали у RestClient, пкм добавили импорт
+        УДАЛЕНО,  так как наслодовали у RestClient, пкм добавили импорт
     """
     def post_v1_account(
         self,
