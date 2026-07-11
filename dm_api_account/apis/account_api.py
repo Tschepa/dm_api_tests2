@@ -106,6 +106,8 @@ class AccountApi(RestClient):
             path=f'/v1/account/password',
             json=change_password.model_dump(by_alias=True)
         )
+        
+        assert response.status_code == 200, 'Password не изменен'
         if validate_response:
             return UserEnvelope(**response.json())
         return response
