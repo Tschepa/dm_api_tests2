@@ -5,7 +5,9 @@ from requests.exceptions import HTTPError
 @contextmanager
 def check_status_code_http(
     expected_status_code: requests.codes.OK,
-    expected_message: str = 'User must be authenticated!'):
+    expected_message: str = 'User must be authenticated!',
+    expected_field: str = None,
+    expected_error: str = None):
     try:
         yield
         if expected_status_code != requests.codes.OK:
@@ -16,3 +18,6 @@ def check_status_code_http(
         assert e.response.status_code == expected_status_code
         #assert e.response.json()['message'] == expected_message
         assert e.response.json()['title'] == expected_message
+        
+        if expected_field and expected_error:
+            assert e.response.json()['errors'][expected_field] == [expected_error]

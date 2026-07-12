@@ -10,6 +10,7 @@ from hamcrest import (
     equal_to,
 )
 
+from checkers.http_checkers import check_status_code_http
 
 def test_v1_account(
         account_helper,
@@ -45,3 +46,29 @@ def test_v1_account(
         )
     )
     print(response)
+    
+def test_post_v1_account_short_password(account_helper, short_password_user):
+    with check_status_code_http(400, "Validation failed", "Password", "Short"):
+        account_helper.register_new_user(
+            short_password_user.login,
+            short_password_user.password,
+            short_password_user.email
+        )
+
+
+def test_post_v1_account_invalid_email(account_helper, invalid_email_user):
+    with check_status_code_http(400, "Validation failed", "Email", "Invalid"):
+        account_helper.register_new_user(
+            invalid_email_user.login,
+            invalid_email_user.password,
+            invalid_email_user.email
+        )
+
+
+def test_post_v1_account_short_login(account_helper, short_login_user):
+    with check_status_code_http(400, "Validation failed", "Login", "Short"):
+        account_helper.register_new_user(
+            short_login_user.login,
+            short_login_user.password,
+            short_login_user.email
+        )
