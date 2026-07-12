@@ -65,6 +65,7 @@ class RestClient:
         
         if self.disable_log:
             rest_response = self.session.request(method=method, url=full_url, **kwargs)
+            rest_response.raise_for_status()
             return rest_response
         
         # логируем запрос
@@ -90,6 +91,7 @@ class RestClient:
             #json=rest_response.json()
             json=self._get_json(rest_response)
         )
+        rest_response.raise_for_status()
         return rest_response
     
     # при регистрации в ответе нет тела, обходим этот кейс
