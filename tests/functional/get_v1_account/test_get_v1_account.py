@@ -11,13 +11,17 @@ from hamcrest import (
     instance_of,
 )
 
+from assertpy import assert_that, soft_assertions
+
 from checkers.http_checkers import check_status_code_http
+from dm_api_account.models.user_details_envelope import UserRole
 from services.dm_api_account import DMApiAccount
 
 
 def test_get_v1_account_auth(
         auth_account_helper
         ):
+    
     with check_status_code_http(200, ''):
         response = auth_account_helper.dm_account_api.account_api.get_v1_account(validate_response=True)
     assert_that(
@@ -57,6 +61,15 @@ def test_get_v1_account_auth(
         )
     )
     print(response)
+
+    with soft_assertions():
+        assert_that(response.resource.login).starts_with('user')
+        print('Проверка логина прошла')
+        assert_that(response.resource.online).is_instance_of(datetime)
+        print('Проверка даты прошла')
+        assert_that(response.resource.roles).contains(UserRole.GUEST.value, UserRole.PLAYER.value)
+        print('Проверка ролей прошла')
+
     
 
 def test_get_v1_account_no_auth(account_helper):
