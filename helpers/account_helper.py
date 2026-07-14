@@ -5,6 +5,7 @@ from json import (
     JSONDecodeError,
 )
 
+from checkers.http_checkers import check_status_code_http
 from dm_api_account.models.change_email import ChangeEmail
 from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
@@ -129,11 +130,15 @@ class AccountHelper:
             remember_me=True
         )
         
-        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,
+        '''response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,
         validate_response=False)
-        assert response.status_code == 403, 'Пользователь с измененным имейлом авторизован до активации нового токена'
-        
-        # Получение токена о смене имейла
+        assert response.status_code == 403, 'Пользователь с измененным имейлом авторизован до активации нового токена'''''
+        with check_status_code_http(403, 'User is inactive. Address the technical support for more details'):
+            self.dm_account_api.login_api.post_v1_account_login(
+                login_credentials=login_credentials,
+                validate_response=False)
+            
+            # Получение токена о смене имейла
         response = self.mailhog.mailhog_api.get_api_v2_messages()
         assert response.status_code == 200, 'Письмо об изменении имейла не было получено'
         
