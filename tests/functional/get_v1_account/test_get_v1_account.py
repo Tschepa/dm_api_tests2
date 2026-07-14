@@ -12,6 +12,7 @@ from hamcrest import (
 )
 
 from checkers.http_checkers import check_status_code_http
+from services.dm_api_account import DMApiAccount
 
 
 def test_get_v1_account_auth(
@@ -59,5 +60,7 @@ def test_get_v1_account_auth(
     
 
 def test_get_v1_account_no_auth(account_helper):
+    account_helper.dm_account_api.account_api.session.headers.clear()
+    account_helper.dm_account_api.login_api.session.headers.clear()
     with check_status_code_http(401, 'User must be authenticated'):
         account_helper.dm_account_api.account_api.get_v1_account(validate_response=False)
