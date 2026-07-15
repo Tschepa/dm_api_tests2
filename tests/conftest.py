@@ -104,7 +104,6 @@ def auth_account_helper(mailhog_api, prepare_user):
 def prepare_user():
     now = datetime.now()
     timestamp = now.strftime("%d_%m_%Y_%H_%M_%S_%f")
-    
     login = f"user_{timestamp}"
     password = v.get('user.password')
     email = f"{login}@mail.ru"
