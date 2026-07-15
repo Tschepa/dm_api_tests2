@@ -28,10 +28,6 @@ def test_v1_account(
     PostV1Account.check_response_values(response)
     print(response)
 
-
-
-
-
 def test_post_v1_account_short_password(account_helper, short_password_user):
     with check_status_code_http(400, "Validation failed", "Password", "Short"):
         account_helper.register_new_user(
