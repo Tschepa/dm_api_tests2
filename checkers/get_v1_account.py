@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import contains
 
 from assertpy import soft_assertions
 from hamcrest import (
@@ -23,6 +24,7 @@ class GetV1Account:
                 response
         ):
             with check_status_code_http(200, ''):
+                today = datetime.now().strftime('%Y-%m-%d')
                 assert_that(
                     response,
                     all_of(
@@ -60,11 +62,18 @@ class GetV1Account:
                     )
                 )
                 print(response)
+            assert_that(str(response.resource.login), starts_with('user'))
+            print('Проверка логина прошла')
+            assert_that(str(response.resource.online), starts_with(today))
+            print('Проверка даты прошла')
+            assert_that(response.resource.roles), contains(UserRole.GUEST.value, UserRole.PLAYER.value)
+            print('Проверка ролей прошла')
             
+            '''
             with soft_assertions():
                 assert_that(response.resource.login).starts_with('user')
                 print('Проверка логина прошла')
                 assert_that(response.resource.online).is_instance_of(datetime)
                 print('Проверка даты прошла')
                 assert_that(response.resource.roles).contains(UserRole.GUEST.value, UserRole.PLAYER.value)
-                print('Проверка ролей прошла')
+                print('Проверка ролей прошла')'''

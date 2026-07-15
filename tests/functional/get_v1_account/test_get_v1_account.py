@@ -19,11 +19,10 @@ from dm_api_account.models.user_details_envelope import UserRole
 from services.dm_api_account import DMApiAccount
 
 
-def test_get_v1_account_auth(
-        auth_account_helper
-        ):
+def test_get_v1_account_auth(auth_account_helper):
     response = auth_account_helper.dm_account_api.account_api.get_v1_account(validate_response=True)
     GetV1Account.check_response_values_account(response)
+    print(response)
 
 
 def test_get_v1_account_no_auth(account_helper):

@@ -11,6 +11,8 @@ from dm_api_account.models.change_password import ChangePassword
 from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.registration import Registration
 from dm_api_account.models.reset_password import ResetPassword
+from dm_api_account.models.user_details_envelope import UserDetailsEnvelope
+from dm_api_account.models.user_envelope import UserEnvelope
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
@@ -213,6 +215,7 @@ class AccountHelper:
                 print(token)
                 assert token is not None, 'Письмо с токеном о не пришло'
         return token"""
+
     
     @retry(
         stop_max_attempt_number=5,
