@@ -86,17 +86,17 @@ def auth_account_helper(mailhog_api, prepare_user):
     )
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mailhog=mailhog_api)
-    account_helper.auth_client(
+    '''account_helper.auth_client(
         login=v.get('user.login'),
         password=v.get('user.password')
-    )
+    )'''
     
-    '''login = prepare_user.login
+    login = prepare_user.login
     password = prepare_user.password
     email = prepare_user.email
     
-    account_helper.register_new_user(login=login, password=password, email=email)'''
-    #account_helper.auth_client(login=login, password=password)
+    account_helper.register_new_user(login=login, password=password, email=email)
+    account_helper.auth_client(login=login, password=password)
     return account_helper
 
 
@@ -105,7 +105,7 @@ def prepare_user():
     now = datetime.now()
     timestamp = now.strftime("%d_%m_%Y_%H_%M_%S_%f")
     login = f"user_{timestamp}"
-    password = v.get('user.password')
+    password = '12345678'
     email = f"{login}@mail.ru"
     User = namedtuple('User', ['login', 'password', 'email'])
     user = User(login=login, password=password, email=email)
