@@ -79,7 +79,7 @@ class AccountApi(RestClient):
         **kwargs
     ):
         """
-        Get current user
+         Get current user
 
         :param json_data:
         :return:
