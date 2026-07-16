@@ -1,4 +1,6 @@
 import time
+
+import allure
 from retrying import retry
 from json import (
     loads,
@@ -58,7 +60,8 @@ class AccountHelper:
         token = {"x-dm-auth-token": response.headers["x-dm-auth-token"]}
         self.dm_account_api.account_api.set_headers(token)
         self.dm_account_api.login_api.set_headers(token)
-        
+    
+    @allure.step('Регистрация нового пользователя')
     def register_new_user(self, login:str, password: str, email:str):
         registration = Registration(
             login=login,
@@ -76,6 +79,7 @@ class AccountHelper:
         response = self.activate_user(token=token)
         return response
     
+    @allure.step('Аутентификация пользователя')
     def user_login(
             self,
             login:str,
