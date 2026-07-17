@@ -1,10 +1,16 @@
 # пакет - модуль - класс (те же параметры, что и у апишек)
 
-from requests import session
+from requests import (
+    session,
+    Response,
+)
 import structlog
 import uuid
 from json import JSONDecodeError
 import curlify
+from swagger_coverage_py.listener import CoverageListener
+from swagger_coverage_py.request_schema_handler import RequestSchemaHandler
+from swagger_coverage_py.uri import URI
 
 from restclient.configuration import Configuration
 from restclient.utilities import allure_attach
@@ -83,6 +89,25 @@ class RestClient:
         # выполняем запрос
         rest_response = self.session.request(method=method, url=full_url, **kwargs)
         curl = curlify.to_curl(rest_response.request)
+        '''response: Response = CoverageListener(
+            method="get",
+            base_url="https://petstore.swagger.io",
+            raw_path="/v2/store/order/{orderId}",
+            uri_params={
+                "orderId": 1
+            },
+            params={
+                "type": "active"
+            },
+        ).response'''
+        uri = URI(host=self.host, base_path="", unformatted_path=path, uri_params=kwargs.get('params'))
+        RequestSchemaHandler(
+            uri,
+            method.lower,
+            rest_response,
+            kwargs
+        ).write_schema()
+        
         print(curl)
         
         # логирование ответа сервера
