@@ -1,6 +1,7 @@
 from datetime import datetime
 from operator import contains
 
+import allure
 from assertpy import soft_assertions
 from hamcrest import (
     assert_that,
@@ -19,6 +20,7 @@ from dm_api_account.models.user_details_envelope import UserRole
 class GetV1Account:
 
     @classmethod
+    @allure.step('Проверка ответа')
     def check_response_values_account(
                 cls,
                 response

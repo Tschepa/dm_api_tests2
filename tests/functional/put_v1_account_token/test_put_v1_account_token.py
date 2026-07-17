@@ -1,4 +1,7 @@
 from json import loads, JSONDecodeError
+
+import allure
+
 from dm_api_account.apis.account_api import AccountApi
 from dm_api_account.apis.login_api import LoginApi
 from api_mailhog.apis.mailhog_api import MailhogApi
@@ -22,7 +25,9 @@ structlog.configure(
     ]
 )
 
-
+@allure.suite('Тесты на проверку метода PUT v1/account/token')
+@allure.sub_suite('Позитивные тесты')
+@allure.title('Проверка активации зарегитсрированного пользователя')
 def test_v1_account_token():
     
     # Регистрация пользователя

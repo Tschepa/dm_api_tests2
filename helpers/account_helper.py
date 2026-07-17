@@ -51,7 +51,8 @@ class AccountHelper:
     ):
         self.dm_account_api = dm_account_api
         self.mailhog = mailhog
-        
+    
+    @allure.step('Авторизация пользователя')
     def auth_client(self, login: str, password: str):
         response = self.user_login(
             login=login,
@@ -102,6 +103,7 @@ class AccountHelper:
             assert response.headers['x-dm-auth-token'], 'Токен для пользователя не был получен'
         return response
     
+    @allure.step('Получение токена при активации')
     def activate_user(
             self,
             token: str
@@ -112,6 +114,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
     
+    @allure.step('Изменение email')
     def change_email(
             self,
             login:str,
@@ -158,6 +161,7 @@ class AccountHelper:
         # Авторизация пользователя с измененным имейлом
         self.user_login(login=login, password=password)
     
+    @allure.step('Изменение пароля')
     def change_password(
             self,
             login: str,
@@ -187,6 +191,7 @@ class AccountHelper:
         )
         return response
     
+    @allure.step('Логаут пользователя на всех устройствах')
     def logout_all(
             self,
             headers = None

@@ -1,3 +1,4 @@
+import allure
 import requests
 
 from dm_api_account.models.change_email import ChangeEmail
@@ -19,6 +20,7 @@ class AccountApi(RestClient):
         self.headers = headers
         УДАЛЕНО,  так как наслодовали у RestClient, пкм добавили импорт
     """
+    @allure.step('Зарегистрировать нового пользователя')
     def post_v1_account(
         self,
         registration: Registration
@@ -36,6 +38,7 @@ class AccountApi(RestClient):
         response = self.post(path=f'/v1/account', json=registration.model_dump(exclude_none=True, by_alias=True))
         return response
     
+    @allure.step('Активировать пользователя')
     def put_v1_account_token(
         self,
         token,
@@ -53,6 +56,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
     
+    @allure.step('Изменить email')
     def put_v1_account_email(
         self,
         change_email: ChangeEmail,
@@ -73,6 +77,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
     
+    @allure.step('Получить информацию о пользователе')
     def get_v1_account(
         self,
         validate_response=True,
@@ -92,6 +97,7 @@ class AccountApi(RestClient):
             return UserDetailsEnvelope(**response.json())
         return response
     
+    @allure.step('Изменить пароль')
     def put_v1_account_password(
         self,
         change_password: ChangePassword,
@@ -111,8 +117,8 @@ class AccountApi(RestClient):
         if validate_response:
             return UserEnvelope(**response.json())
         return response
-
     
+    @allure.step('Отправить запрос на смену пароля')
     def post_v1_account_password(
         self,
         reset_password:ResetPassword,
@@ -129,6 +135,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
     
+    @allure.step('Разлогинить пользователя')
     def delete_v1_account_login(
             self,
             **kwargs
@@ -139,6 +146,7 @@ class AccountApi(RestClient):
         )
         return response
     
+    @allure.step('Разлогинить пользователя на всех устройствах')
     def delete_v1_account_login_all(
             self,
             **kwargs

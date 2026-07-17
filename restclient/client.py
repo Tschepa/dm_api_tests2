@@ -7,6 +7,7 @@ from json import JSONDecodeError
 import curlify
 
 from restclient.configuration import Configuration
+from restclient.utilities import allure_attach
 
 
 class RestClient:
@@ -58,6 +59,7 @@ class RestClient:
         return self._send_request(method='DELETE', path=path, **kwargs)
     
     # метод, логирующий запросы (тип мет., эндпойнт, аргументы, с которыми может работать библиотека requests)
+    @allure_attach
     def _send_request(self, method, path, **kwargs):
         # pip install structlog =>  фиксируем зависимости pip freeze > requirements.txt
         log = self.log.bind(event_id=str(uuid.uuid4()))
