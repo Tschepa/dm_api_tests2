@@ -84,7 +84,8 @@ class RestClient:
             params=kwargs.get('params'),
             headers=kwargs.get('headers'),
             json=kwargs.get('json'),
-            data=kwargs.get('data')
+            #data=kwargs.get('data')
+            data=kwargs.get('')
         )
         # выполняем запрос
         rest_response = self.session.request(method=method, url=full_url, **kwargs)
@@ -103,7 +104,7 @@ class RestClient:
         uri = URI(host=self.host, base_path="", unformatted_path=path, uri_params=kwargs.get('params'))
         RequestSchemaHandler(
             uri,
-            method.lower,
+            method.lower(),
             rest_response,
             kwargs
         ).write_schema()
