@@ -24,6 +24,21 @@ jobs:
          python -m pip install --upgrade pip
          pip install -r requirements.txt
 
+     - name: Install dependencies
+       run: |
+         python -m pip install --upgrade pip
+         pip install -r requirements.txt
+
+     - name: Create directories for reports
+       run: |
+         mkdir -p swagger-coverage-output/185.185.143.231_5051
+         mkdir -p allure-results
+
+     - name: Run tests
+       run: |
+         pytest ./tests --alluredir=allure-results --disable-warnings
+       continue-on-error: true
+
      - name: Run tests
        run: |
          pytest ./tests --alluredir=allure-results --disable-warnings
@@ -32,9 +47,17 @@ jobs:
      - name: Archive allure results
        uses: actions/upload-artifact@v4
        with:
-           name: allure-results
-           path: allure-results
-           retention-days: 1
+         name: allure-results
+         path: allure-results
+         retention-days: 1
+
+     - name: Archive swagger coverage data          # ← ЭТОТ БЛОК ДОБАВИТЬ
+       if: always()                                  # ←
+       uses: actions/upload-artifact@v4              # ←
+       with: # ←
+         name: swagger-coverage-output               # ←
+         path: swagger-coverage-output               # ←
+         retention-days: 1                           # ←
 
   generate-report:
       runs-on: ubuntu-latest

@@ -41,7 +41,7 @@ options = (
     'user.password',
 )
 
-@pytest.fixture(scope="session", autouse=True)
+'''@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
     # Создаем папку принудительно
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
@@ -50,7 +50,19 @@ def setup_swagger_coverage():
     
     yield
     reporter.generate_report()
-    reporter.cleanup_input_files()
+    reporter.cleanup_input_files()'''
+@pytest.fixture(scope="session", autouse=True)
+def setup_swagger_coverage():
+    try:
+        os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
+        reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
+        reporter.setup("/swagger/Account/swagger.json")
+        yield
+        reporter.generate_report()
+        reporter.cleanup_input_files()
+    except Exception as e:
+        print(f"⚠️ Swagger coverage error: {e}")
+        yield  # Тесты продолжаются
 
 @pytest.fixture(scope='session', autouse=True)
 def set_config(request):
