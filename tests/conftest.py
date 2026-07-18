@@ -1,3 +1,4 @@
+import os
 from collections import namedtuple
 from datetime import datetime
 from json import loads, JSONDecodeError
@@ -42,6 +43,8 @@ options = (
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
+    # Создаем папку принудительно
+    os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
     reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
     reporter.setup("/swagger/Account/swagger.json")
     
