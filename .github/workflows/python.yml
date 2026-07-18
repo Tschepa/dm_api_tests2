@@ -1,4 +1,4 @@
-name: Python Tests
+'''name: Python Tests
 
 on: [ push, pull_request ]
 
@@ -67,4 +67,4 @@ jobs:
       - name: Deploy to Github Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      - run: echo 'https://tschepa.github.io/dm_api_tests2/'
+      - run: echo 'https://tschepa.github.io/dm_api_tests2/''''

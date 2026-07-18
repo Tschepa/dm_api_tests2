@@ -27,7 +27,7 @@ structlog.configure(
 
 @allure.suite('Тесты на проверку метода PUT v1/account/token')
 @allure.sub_suite('Позитивные тесты')
-@allure.title('Проверка активации зарегитсрированного пользователя')
+@allure.title('Проверка активации зарегистрированного пользователя')
 def test_v1_account_token():
     
     # Регистрация пользователя
