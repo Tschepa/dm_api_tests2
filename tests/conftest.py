@@ -40,6 +40,8 @@ options = (
     'service.mailhog',
     'user.login',
     'user.password',
+    'telegram.chat_id',
+    'telegram.token'
 )
 
 '''@pytest.fixture(scope="session", autouse=True)
@@ -89,7 +91,8 @@ def set_config(request):
     for option in options:
         v.set(f'{option}', request.config.getoption(f'--{option}'))
     yield
-
+    os.environ["TELEGRAM_BOT_CHAT_ID"] = v.get("telegram.chat_id")
+    os.environ["TELEGRAM_BOT_ACCESS_TOKEN"] = v.get("telegram.token")
 def  pytest_addoption(parser):
     parser.addoption('--env', action='store', default='stg', help='run stg')
     
