@@ -42,12 +42,32 @@ options = (
     'user.password',
 )
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_swagger_coverage():
+'''@pytest.fixture(scope="session", autouse=True)
+def setup_swagger_coverage(reporter=None):
     # Создаем папку принудительно LOOK
+
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
     reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
     reporter.setup("/swagger/Account/swagger.json")
+    
+    yield
+    reporter.generate_report()
+    reporter.cleanup_input_files()'''
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_swagger_coverage():
+    import os
+    
+    # Создаем папку принудительно LOOK
+    os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
+    
+    reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
+    reporter.setup("/swagger/Account/swagger.json")
+    
+    # Отладка - выводим путь (ПОСЛЕ создания репортера)
+    print(f"Current directory: {os.getcwd()}")
+    print(f"Output dir: {reporter.output_dir}")
     
     yield
     reporter.generate_report()
