@@ -1,7 +1,4 @@
 import os
-import re
-import shutil
-
 from collections import namedtuple
 from datetime import datetime
 from json import loads, JSONDecodeError
@@ -25,28 +22,7 @@ from restclient.configuration import Configuration as DmApiConfiguration
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
-# ДОБАВИТЬ ЭТОТ БЛОК
-
-import swagger_coverage_py.results_writers.base_schemas_manager as base_module
-from swagger_coverage_py.results_writers.base_schemas_manager import ApiDocsManagerBase
-
 import structlog
-
-
-
-# ============ ПЕРЕОПРЕДЕЛЯЕМ КЛАСС ДЛЯ ИСПРАВЛЕНИЯ ПУТЕЙ ============
-class FixedApiDocsManager(ApiDocsManagerBase):
-    def __get_output_subdir(self):
-        subdir = re.match(r"(^\w*)://(.*)", self._uri.host).group(2)
-        if "/" in subdir:
-            subdir = subdir.replace("/", "-")
-        subdir = subdir.replace(":", "_")
-        return subdir
-
-# Патчим оригинальный класс
-import swagger_coverage_py.results_writers.base_schemas_manager as base_module
-base_module.ApiDocsManagerBase = FixedApiDocsManager
-# ===================================================================
 
 
 structlog.configure(
