@@ -59,11 +59,15 @@ def setup_swagger_coverage(reporter=None):
 def setup_swagger_coverage():
     import os
     import platform
-    # Создаем папку принудительно LOOK
-    os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
-    # Создаем папку с двоеточием (для Linux/GitHub Actions)  ← ДОБАВИТЬ
-    if platform.system() != "Windows":  # ← ДОБАВИТЬ
-        os.makedirs("swagger-coverage-output/185.185.143.231:5051", exist_ok=True)  # ← ДОБАВИТЬ
+    hosts = [
+        "185.185.143.231:5051",
+        "185.185.143.231:5025",
+    ]
+    
+    for host in hosts:
+        os.makedirs(f"swagger-coverage-output/{host.replace(':', '_')}", exist_ok=True)
+        if platform.system() != "Windows":
+            os.makedirs(f"swagger-coverage-output/{host}", exist_ok=True)
     reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
     reporter.setup("/swagger/Account/swagger.json")
     
