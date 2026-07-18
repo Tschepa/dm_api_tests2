@@ -8,13 +8,11 @@ from json import (
 )
 
 from checkers.http_checkers import check_status_code_http
-from dm_api_account.models.change_email import ChangeEmail
-from dm_api_account.models.change_password import ChangePassword
-from dm_api_account.models.login_credentials import LoginCredentials
-from dm_api_account.models.registration import Registration
-from dm_api_account.models.reset_password import ResetPassword
-from dm_api_account.models.user_details_envelope import UserDetailsEnvelope
-from dm_api_account.models.user_envelope import UserEnvelope
+from clients.http.dm_api_account.models.change_email import ChangeEmail
+from clients.http.dm_api_account.models.change_password import ChangePassword
+from clients.http.dm_api_account.models.login_credentials import LoginCredentials
+from clients.http.dm_api_account.models.registration import Registration
+from clients.http.dm_api_account.models.reset_password import ResetPassword
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 

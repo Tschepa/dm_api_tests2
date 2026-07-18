@@ -1,23 +1,10 @@
-from datetime import datetime
-
 import allure
-import requests
-from hamcrest import (
-    assert_that,
-    all_of,
-    has_property,
-    has_properties,
-    equal_to,
-    starts_with,
-    instance_of,
-)
 
-from assertpy import assert_that, soft_assertions
-
+from clients.http.dm_api_account.models.user_details_envelope import UserRole
 from checkers.get_v1_account import GetV1Account
 from checkers.http_checkers import check_status_code_http
-from dm_api_account.models.user_details_envelope import UserRole
-from services.dm_api_account import DMApiAccount
+
+
 @allure.suite('Тесты на проверку метода GET v1/account')
 
 @allure.title('Проверка получения информации об авторизорованном пользователе')
