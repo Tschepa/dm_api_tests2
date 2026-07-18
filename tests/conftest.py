@@ -1,4 +1,7 @@
 import os
+import re
+import shutil
+
 from collections import namedtuple
 from datetime import datetime
 from json import loads, JSONDecodeError
@@ -22,7 +25,29 @@ from restclient.configuration import Configuration as DmApiConfiguration
 from services.dm_api_account import DMApiAccount
 from services.api_mailhog import MailHogApi
 
+# ДОБАВИТЬ ЭТОТ БЛОК
+
+import swagger_coverage_py.results_writers.base_schemas_manager as base_module
+from swagger_coverage_py.results_writers.base_schemas_manager import ApiDocsManagerBase
+
 import structlog
+
+
+
+# ============ ПЕРЕОПРЕДЕЛЯЕМ КЛАСС ДЛЯ ИСПРАВЛЕНИЯ ПУТЕЙ ============
+class FixedApiDocsManager(ApiDocsManagerBase):
+    def __get_output_subdir(self):
+        subdir = re.match(r"(^\w*)://(.*)", self._uri.host).group(2)
+        if "/" in subdir:
+            subdir = subdir.replace("/", "-")
+        subdir = subdir.replace(":", "_")
+        return subdir
+
+# Патчим оригинальный класс
+import swagger_coverage_py.results_writers.base_schemas_manager as base_module
+base_module.ApiDocsManagerBase = FixedApiDocsManager
+# ===================================================================
+
 
 structlog.configure(
     processors=[
@@ -41,7 +66,7 @@ options = (
     'user.password',
 )
 
-@pytest.fixture(scope="session", autouse=True)
+'''@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
     # Создаем папку принудительно
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
@@ -50,19 +75,35 @@ def setup_swagger_coverage():
     
     yield
     reporter.generate_report()
-    reporter.cleanup_input_files()
-'''@pytest.fixture(scope="session", autouse=True)
+    reporter.cleanup_input_files()'''
+
+
+@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
+    """Настройка Swagger Coverage с исправленными путями"""
     try:
+        # Создаем папку с правильным именем (с подчеркиванием)
         os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
+        
+        # Если есть старая папка с двоеточием - переименовываем
+        old_path = "swagger-coverage-output/185.185.143.231:5051"
+        new_path = "swagger-coverage-output/185.185.143.231_5051"
+        if os.path.exists(old_path) and not os.path.exists(new_path):
+            import shutil
+            shutil.move(old_path, new_path)
+        
         reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
         reporter.setup("/swagger/Account/swagger.json")
+        
         yield
+        
         reporter.generate_report()
         reporter.cleanup_input_files()
+        print("✅ Swagger coverage report generated successfully")
+    
     except Exception as e:
         print(f"⚠️ Swagger coverage error: {e}")
-        yield  # Тесты продолжаются'''
+        yield
 
 @pytest.fixture(scope='session', autouse=True)
 def set_config(request):
