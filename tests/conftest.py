@@ -58,10 +58,12 @@ def setup_swagger_coverage(reporter=None):
 @pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
     import os
-    
+    import platform
     # Создаем папку принудительно LOOK
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
-    
+    # Создаем папку с двоеточием (для Linux/GitHub Actions)  ← ДОБАВИТЬ
+    if platform.system() != "Windows":  # ← ДОБАВИТЬ
+        os.makedirs("swagger-coverage-output/185.185.143.231:5051", exist_ok=True)  # ← ДОБАВИТЬ
     reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
     reporter.setup("/swagger/Account/swagger.json")
     
