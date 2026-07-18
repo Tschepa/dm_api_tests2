@@ -7,11 +7,11 @@ from collections import namedtuple
 from datetime import datetime
 from json import loads, JSONDecodeError
 import uuid
+from pathlib import Path
 
 import pytest
 from swagger_coverage_py.reporter import CoverageReporter
 from vyper import v
-from pathlib import Path
 
 from dm_api_account.apis.account_api import AccountApi
 from dm_api_account.apis.login_api import LoginApi
@@ -44,7 +44,7 @@ options = (
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
-    # Создаем папку принудительно
+    # Создаем папку принудительно LOOK
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
     reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
     reporter.setup("/swagger/Account/swagger.json")
@@ -66,6 +66,7 @@ def set_config(request):
 
 def  pytest_addoption(parser):
     parser.addoption('--env', action='store', default='stg', help='run stg')
+    
     for option in options:
         parser.addoption(f'--{option}', action='store', default=None)
 

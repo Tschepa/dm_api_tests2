@@ -1,6 +1,5 @@
 from json import loads, JSONDecodeError
 import uuid
-
 import allure
 
 from dm_api_account.apis.account_api import AccountApi
