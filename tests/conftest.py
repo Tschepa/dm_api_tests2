@@ -42,7 +42,7 @@ options = (
     'user.password',
 )
 
-@pytest.fixture(scope="session", autouse=True)
+'''@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
     # Создаем папку принудительно
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
@@ -51,35 +51,22 @@ def setup_swagger_coverage():
     
     yield
     reporter.generate_report()
-    reporter.cleanup_input_files()
+    reporter.cleanup_input_files()'''
 
 
-'''@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
-    """Настройка Swagger Coverage с исправленными путями"""
-    try:
-        # Создаем папку с правильным именем (с подчеркиванием)
-        os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
-        
-        # Если есть старая папка с двоеточием - переименовываем
-        old_path = "swagger-coverage-output/185.185.143.231:5051"
-        new_path = "swagger-coverage-output/185.185.143.231_5051"
-        if os.path.exists(old_path) and not os.path.exists(new_path):
-            import shutil
-            shutil.move(old_path, new_path)
-        
-        reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
-        reporter.setup("/swagger/Account/swagger.json")
-        
-        yield
-        
-        reporter.generate_report()
-        reporter.cleanup_input_files()
-        print("✅ Swagger coverage report generated successfully")
+    # Создаем папки для ВСЕХ хостов
+    hosts = ["185.185.143.231_5051", "185.185.143.231_5025"]
+    for host in hosts:
+        os.makedirs(f"swagger-coverage-output/{host}", exist_ok=True)
     
-    except Exception as e:
-        print(f"⚠️ Swagger coverage error: {e}")
-        yield'''
+    reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
+    reporter.setup("/swagger/Account/swagger.json")
+    
+    yield
+    reporter.generate_report()
+    reporter.cleanup_input_files()
 
 @pytest.fixture(scope='session', autouse=True)
 def set_config(request):
