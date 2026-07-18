@@ -66,7 +66,7 @@ options = (
     'user.password',
 )
 
-'''@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
     # Создаем папку принудительно
     os.makedirs("swagger-coverage-output/185.185.143.231_5051", exist_ok=True)
@@ -75,10 +75,10 @@ def setup_swagger_coverage():
     
     yield
     reporter.generate_report()
-    reporter.cleanup_input_files()'''
+    reporter.cleanup_input_files()
 
 
-@pytest.fixture(scope="session", autouse=True)
+'''@pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
     """Настройка Swagger Coverage с исправленными путями"""
     try:
@@ -103,7 +103,7 @@ def setup_swagger_coverage():
     
     except Exception as e:
         print(f"⚠️ Swagger coverage error: {e}")
-        yield
+        yield'''
 
 @pytest.fixture(scope='session', autouse=True)
 def set_config(request):

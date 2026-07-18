@@ -24,17 +24,12 @@ jobs:
          python -m pip install --upgrade pip
          pip install -r requirements.txt
 
-     - name: Create directories for reports      # ← СНАЧАЛА создаем папки
-       run: |
-         mkdir -p swagger-coverage-output/185.185.143.231_5051
-         mkdir -p allure-results
-
-     - name: Run tests                           # ← ПОТОМ запускаем тесты
+     - name: Run tests
        run: |
          pytest ./tests --alluredir=allure-results --disable-warnings
        continue-on-error: true
 
-     - name: Archive allure results              # ← ПОТОМ архивируем
+     - name: Archive allure results
        uses: actions/upload-artifact@v4
        with:
          name: allure-results
