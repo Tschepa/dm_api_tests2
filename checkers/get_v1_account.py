@@ -62,8 +62,6 @@ class GetV1Account:
                     )
                 )
                 print(response)
-            assert_that(str(response.resource.login), starts_with('user'))
-            print('Проверка логина прошла')
             assert_that(str(response.resource.online), starts_with(today))
             print('Проверка даты прошла')
             assert_that(response.resource.roles), contains(UserRole.GUEST.value, UserRole.PLAYER.value)

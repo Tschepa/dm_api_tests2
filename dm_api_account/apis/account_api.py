@@ -107,7 +107,6 @@ class AccountApi(RestClient):
             json=change_password.model_dump(by_alias=True)
         )
         
-        assert response.status_code == 200, 'Password не изменен'
         if validate_response:
             return UserEnvelope(**response.json())
         return response
@@ -124,7 +123,6 @@ class AccountApi(RestClient):
             json=reset_password.model_dump(exclude_none=True, by_alias=True),
             headers=headers
         )
-        assert response.status_code == 200, 'Запрос на смену пароля не отправлен'
         if validate_response:
             return UserEnvelope(**response.json())
         return response

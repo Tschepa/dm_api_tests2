@@ -26,7 +26,6 @@ def test_v1_account(
     account_helper.register_new_user(login=login, password=password, email=email)
     response = account_helper.user_login(login=login, password=password, validate_response=True)
     PostV1Account.check_response_values(response)
-    print(response)
 
 def test_post_v1_account_short_password(account_helper, short_password_user):
     with check_status_code_http(400, "Validation failed", "Password", "Short"):

@@ -12,18 +12,6 @@ from services.api_mailhog import MailHogApi
 from services.dm_api_account import DMApiAccount
 from helpers.account_helper import AccountHelper
 
-import structlog
-
-structlog.configure(
-    processors=[
-        structlog.processors.JSONRenderer(
-            indent=4,
-            ensure_ascii=True,
-            sort_keys=True
-        )
-    ]
-)
-
 
 def test_v1_account_password(account_helper, prepare_user):
     
