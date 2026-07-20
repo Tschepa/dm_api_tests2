@@ -79,8 +79,7 @@ def prepare_user():
     User = namedtuple('User', ['login', 'password', 'email'])
     user = User(login=login, password=password, email=email)
     return user
-    
-@pytest.fixture
+'''@pytest.fixture
 def short_password_user():
 
     """короткий пароль (менее 6 символов)"""
@@ -114,4 +113,34 @@ def short_login_user():
         login="t",
         password="12345678",
         email="test_short_login@mail.ru"
+    )'''
+    
+@pytest.fixture(params=[
+    {
+        "login": "test_short_pass",
+        "password": "12345",
+        "email": "test_short_pass@mail.ru",
+        "expected_error": {"field": "Password", "reason": "Short"}
+    },
+    {
+        "login": "test_invalid_email",
+        "password": "12345678",
+        "email": "test_invalid_emailmail.ru",
+        "expected_error": {"field": "Email", "reason": "Invalid"}
+    },
+    {
+        "login": "t",
+        "password": "12345678",
+        "email": "test_short_login@mail.ru",
+        "expected_error": {"field": "Login", "reason": "Short"}
+    }
+])
+def invalid_user_data(request):
+    User = namedtuple('User', ['login', 'password', 'email', 'expected_error'])
+    data = request.param
+    return User(
+        login=data["login"],
+        password=data["password"],
+        email=data["email"],
+        expected_error=data["expected_error"]
     )

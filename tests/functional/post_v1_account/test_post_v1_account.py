@@ -1,5 +1,6 @@
 from datetime import datetime
 
+import pytest
 from hamcrest import (
     assert_that,
     has_property,
@@ -27,7 +28,7 @@ def test_v1_account(
     response = account_helper.user_login(login=login, password=password, validate_response=True)
     PostV1Account.check_response_values(response)
 
-def test_post_v1_account_short_password(account_helper, short_password_user):
+'''def test_post_v1_account_short_password(account_helper, short_password_user):
     with check_status_code_http(400, "Validation failed", "Password", "Short"):
         account_helper.register_new_user(
             short_password_user.login,
@@ -51,4 +52,17 @@ def test_post_v1_account_short_login(account_helper, short_login_user):
             short_login_user.login,
             short_login_user.password,
             short_login_user.email
+        )'''
+        
+def test_post_v1_account_invalid_data(account_helper, invalid_user_data):
+    with check_status_code_http(
+        400,
+        "Validation failed",
+        invalid_user_data.expected_error["field"],
+        invalid_user_data.expected_error["reason"]
+    ):
+        account_helper.register_new_user(
+            invalid_user_data.login,
+            invalid_user_data.password,
+            invalid_user_data.email
         )
